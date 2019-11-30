@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dice</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+
+  <style>
+    body{
+      font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    h1{
+      background-color: black;
+      color: blanchedalmond;
+      padding: 12px;
+    }
+  #operation{
+    margin-left: 20%;
+    text-align: center;
+    border: 3px solid black;
+    border-style: groove;
+    width: 60%;
+    margin-top: 2%;
+    
+  }
+
+  #operation button{
+    display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color:black;
+  margin-left:5px ;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+  background-repeat: no-repeat;
+  text-align: center;
+  }
+  #operation input[type="text"] {
+  width: 50px;
+  background-color:#e7e7e7;
+  margin-right: 20px;
+  font-size: large;
+  border: none;
+  padding: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+#up{
+  background-image: url("up.png");
+  background-repeat: no-repeat;
+  background-size: 47px 32px;
+}
+#down{
+  background-image: url("down.png");
+  background-repeat: no-repeat;
+  background-size: 47px 32px;
+}
+#d{
+  
+    border-radius: 10px;
+    padding: 12px;
+    color: black;
+    display: inline;
+    margin-left: 8px;
+    background-color: blanchedalmond;
+  
+}
+#roll{
+
+  margin-top: 30px;
+  color: black;
+ 
+}
+
+  </style>
+</head>
+
+<body>
+
+  <div id="container"></div>
+
+
+  <script type="text/babel">
+   class DiceContainer extends React.Component 
+   {
+     
+     constructor(props)
+     {
+       super(props);
+       this.state = 
+       { 
+         toshow: [],
+         showtotal:0,
+         inputDice: 1,
+         inputSide: 2,
+         finalsum:0
+        
+
+       }; 
+     }
+
+inputStateChangeDice(event) {
+       this.setState({inputDice: event.target.value});
+     }
+inputStateChangeSide(event) {
+       this.setState({inputSide: event.target.value});
+     }
+  IncrementItemDice(){
+    this.setState({ inputDice: this.state.inputDice + 1 });
+  }
+  IncrementItemSide(){
+    this.setState({ inputSide: this.state.inputSide + 1 });
+  }
+  DecreaseItemDice(){
+    this.setState({ inputDice: Math.max(this.state.inputDice - 1,1) });
+  }
+  DecreaseItemSides(){
+    this.setState({ inputSide: Math.max(this.state.inputSide - 1,2) });
+  }
+
+  renderDice(){
+
+    let dice = this.state.inputDice;
+    let side = this.state.inputSide;
+    let sum = 0;
+    let diceResult = [];
+    
+    for(var i = 0; i<dice ; i++){
+
+      diceResult.push(<p id="d">{(Math.floor(Math.random() * side) + 1)}</p>);
+      
+    }
+    for(var j =0; j<diceResult.length;j++){
+          
+        sum += diceResult[j];
+  }  
+
+  return diceResult;
+}
+
+
+submitFunc() {
+
+       this.setState({
+         toshow: this.renderDice(),      
+       });
+     }
+
+
+render() {
+      
+       return (
+         <DicePresentation 
+          inputStateChangeDice={this.inputStateChangeDice.bind(this)}
+          inputStateChangeSide={this.inputStateChangeSide.bind(this)}
+        
+            inputDice={this.state.inputDice}
+            inputSide={this.state.inputSide}
+          
+            
+            renderDice={this.renderDice.bind(this)}
+            submitFunc={this.submitFunc.bind(this)}
+            IncrementItemDice={this.IncrementItemDice.bind(this)}
+            IncrementItemSide={this.IncrementItemSide.bind(this)}
+            DecreaseItemDice={this.DecreaseItemDice.bind(this)}
+            DecreaseItemSides={this.DecreaseItemSides.bind(this)}
+            
+          
+          
+            toshow={this.state.toshow}
+            showtotal={this.state.showtotal}
+            />
+       );
+     }
+
+   };
+
+   class DicePresentation extends React.Component {
+
+     render() {
+       return (
+         <div id="operation">
+           <h1>Welcome to The Dice Game</h1>
+           <h3>Number of dice</h3><input  type="text"  onChange={this.props.inputStateChangeDice.bind(this)}
+           value={this.props.inputDice} /><button onClick={this.props.IncrementItemDice.bind(this)} id="up"></button>
+                  <button onClick={this.props.DecreaseItemDice.bind(this)}id="down"></button><br /><br />
+
+            <h3>Number of sides</h3> <input type="text" onChange={this.props.inputStateChangeSide.bind(this)}
+            value={this.props.inputSide} /><button onClick={this.props.IncrementItemSide.bind(this)}id="up"></button>
+                  <button onClick={this.props.DecreaseItemSides.bind(this)}id="down"></button><br />
+
+                  <button onClick={this.props.submitFunc.bind(this)}id="roll">Roll</button>
+                 
+           
+           <h1> 
+            {this.props.toshow} 
+           </h1>
+           
+         </div>
+        
+       );
+     }
+   };
+
+
+
+   ReactDOM.render(
+     <DiceContainer />, 
+     document.querySelector("#container")
+   );
+
+  </script>
+</body>
+
+</html>
